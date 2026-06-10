@@ -189,9 +189,7 @@
           // Cek apakah user saat ini bertindak sebagai viewer saja
           const isViewer = role === "viewer";
 
-          const [alarms, setAlarms] = useState([
-            { time: "00:00", msg: `Sistem diakses sebagai [${role.toUpperCase()}].`, type: "success" }
-          ]);
+          const [alarms, setAlarms] = useState([]);
 
           const tickRef = useRef(MAX_PTS);
           const espTimeoutRef = useRef(null);
@@ -200,6 +198,17 @@
             const now = new Date();
             const t = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
             setAlarms(prev => [{ time: t, msg, type }, ...prev.slice(0, 9)]);
+          }
+
+          function writeLog(type, message) {
+            const now = new Date();
+            db.ref("eki/conveyor/logs").push({
+              timestamp: Date.now(),
+              time: now.toLocaleString("id-ID"),
+              type,
+              role,
+              message
+            });
           }
 
           useEffect(() => {
@@ -232,6 +241,16 @@
             const stopStatusCb = stopStatusRef.on("value", (snapshot) => {
               const val = snapshot.val();
               if (val !== null) setStopped(val);
+            });
+
+            const logRef = db.ref("eki/conveyor/logs");
+            logRef.limitToLast(100).on("value", (snapshot) => {
+              const data = snapshot.val();
+              if (!data) { setAlarms([]); return; }
+              const logs = Object.entries(data)
+                .map(([id,value]) => ({id,...value}))
+                .sort((a,b)=>b.timestamp-a.timestamp);
+              setAlarms(logs);
             });
 
             const sensorRef = db.ref("eki/conveyor/sensor");
@@ -278,21 +297,25 @@
           }, [stopped, activeSP, espOnline, isViewer]);
 
           function handleApply() {
-            if (isViewer) return; // Proteksi tambahan
+            if (isViewer) return;
             setActiveSP(spInput);
-            addAlarm(`Set point dikirim ke DB → ${spInput} N`, "info");
             db.ref('eki/conveyor/control/setPoint').set(spInput);
+            writeLog("INFO", `Set Point diubah menjadi ${spInput} N`);
           }
 
           function handleUpdatePID() {
-            if (isViewer) return; // Proteksi tambahan
+            if (isViewer) return;
             const nkp = parseFloat(kp) || 1.2, nki = parseFloat(ki) || 0.08, nkd = parseFloat(kd) || 0.05;
             setActivePID({ kp: nkp, ki: nki, kd: nkd });
-            addAlarm(`PID dikirim → Kp=${nkp.toFixed(2)} Ki=${nki.toFixed(3)} Kd=${nkd.toFixed(3)}`, "info");
+
+            db.ref('eki/conveyor/pid/kp').set(nkp);
+            db.ref('eki/conveyor/pid/ki').set(nki);
+            db.ref('eki/conveyor/pid/kd').set(nkd);
+
+            writeLog("INFO", `PID Update Kp=${nkp} Ki=${nki} Kd=${nkd}`);
+
             setPidMsg("✓ Data PID tersimpan di DB");
             setTimeout(() => setPidMsg(""), 3000);
-            
-            db.ref('eki/conveyor/pid').set({ kp: nkp, ki: nki, kd: nkd });
           }
 
           function handleStop() {
