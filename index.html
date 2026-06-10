@@ -534,12 +534,16 @@
                     </thead>
                     <tbody>
                       {alarms.slice(0, 8).map((a, i) => {
-                        const s = alarmStyle[a.type] || alarmStyle.info;
+                        const s =
+  alarmStyle[(a.type || "").toLowerCase()] ||
+  alarmStyle.info;
                         return (
                           <tr key={i} style={{ borderBottom: "1px solid #070f1e", background: i === 0 ? "#070f20" : "transparent" }}>
-                            <td style={{ padding: "5px 10px", color: "#3a6080", fontFamily: "monospace", whiteSpace: "nowrap" }}>{a.time}</td>
+                            <td style={{ padding: "5px 10px", color: "#3a6080", fontFamily: "monospace", whiteSpace: "nowrap" }}>{a.time || new Date(a.timestamp).toLocaleString("id-ID")}</td>
                             <td style={{ padding: "5px 10px" }}><span style={{ color: s.c, background: s.bg, padding: "2px 7px", borderRadius: 4, fontSize: 9, fontWeight: 700 }}>● {s.lbl}</span></td>
-                            <td style={{ padding: "5px 10px", color: i === 0 ? "#b0d0f0" : "#4a7090" }}>{a.msg}</td>
+                            <td style={{ padding: "5px 10px", color: i === 0 ? "#b0d0f0" : "#4a7090" }}>
+  [{(a.role || "SYSTEM").toUpperCase()}] {a.message || a.msg}
+</td>
                           </tr>
                         );
                       })}
