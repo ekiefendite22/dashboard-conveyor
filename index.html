@@ -245,11 +245,11 @@
     <script>
         // --- 1. FIREBASE SETUP ---
         const firebaseConfig = {
-            apiKey: "AIzaSyAZq9dzRoxUtxT3DnjsHImudc888oCeQsk",
-            authDomain: "conveyor-tensioning.firebaseapp.com",
-            databaseURL: "https://conveyor-tensioning-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "conveyor-tensioning",
-            storageBucket: "conveyor-tensioning.firebasestorage.app"
+            apiKey: "AIzaSyArR-iM7_ugkql7giBvqtrDiepLmhplb1E",
+            authDomain: "conveyor-23347-default-rtdb.asia-southeast1.firebasedatabase.app",
+            databaseURL: "https://conveyor-23347-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            projectId: "conveyor-23347",
+            storageBucket: "conveyor-23347.firebasestorage.app"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -469,7 +469,10 @@
         document.getElementById('btn-apply-pid').addEventListener('click', () => {
             if(role !== 'admin' || isStopped) return;
             const kp = Number(document.getElementById('input-kp').value), ki = Number(document.getElementById('input-ki').value), kd = Number(document.getElementById('input-kd').value);
-            db.ref('eki/conveyor/pid').set({ kp, ki, kd });
+            
+            // PATH PENGIRIMAN PID SUDAH DIPERBAIKI KE FOLDER CONTROL
+            db.ref('eki/conveyor/control/pid').set({ kp, ki, kd });
+            
             addLog(`PID dikirim → Kp=${kp} Ki=${ki} Kd=${kd}`, "info");
             document.getElementById('pid-msg').style.opacity = '1';
             setTimeout(() => document.getElementById('pid-msg').style.opacity = '0', 3000);
