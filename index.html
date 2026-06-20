@@ -6,9 +6,7 @@
     <title>Conveyor Dashboard - Standalone</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
@@ -96,67 +94,38 @@
             
             <div class="grid grid-cols-4 gap-3">
                 <div class="card">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] text-[#3a6080] tracking-wider">BELT TENSION</span>
-                        <i class="fa-solid fa-gauge-high text-[#00d4ff]"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-[#00d4ff] leading-none">
-                        <span id="val-tension">0.0</span><span class="text-xs font-normal text-[#3a6080] ml-1">N</span>
-                    </div>
+                    <div class="flex justify-between items-center mb-2"><span class="text-[10px] text-[#3a6080] tracking-wider">BELT TENSION</span><i class="fa-solid fa-gauge-high text-[#00d4ff]"></i></div>
+                    <div class="text-2xl font-bold text-[#00d4ff] leading-none"><span id="val-tension">0.0</span><span class="text-xs font-normal text-[#3a6080] ml-1">N</span></div>
                     <div class="mt-1 text-[10px] text-[#4a7090]" id="lbl-tension-sp">SP: 150 N</div>
                 </div>
                 <div class="card">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] text-[#3a6080] tracking-wider">MOTOR SPEED</span>
-                        <i class="fa-solid fa-rotate-right text-[#a78bfa]"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-[#a78bfa] leading-none">
-                        <span id="val-rpm">0</span><span class="text-xs font-normal text-[#3a6080] ml-1">RPM</span>
-                    </div>
+                    <div class="flex justify-between items-center mb-2"><span class="text-[10px] text-[#3a6080] tracking-wider">MOTOR SPEED</span><i class="fa-solid fa-rotate-right text-[#a78bfa]"></i></div>
+                    <div class="text-2xl font-bold text-[#a78bfa] leading-none"><span id="val-rpm">0</span><span class="text-xs font-normal text-[#3a6080] ml-1">RPM</span></div>
                     <div class="mt-1 text-[10px] text-[#4a7090]">Drive Motor (Encoder)</div>
                 </div>
                 <div class="card">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] text-[#3a6080] tracking-wider">SLIP RATE</span>
-                        <i class="fa-solid fa-arrow-trend-up text-[#10b981]" id="icon-slip"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-[#10b981] leading-none" id="color-slip">
-                        <span id="val-slip">0.0</span><span class="text-xs font-normal text-[#3a6080] ml-1">%</span>
-                    </div>
+                    <div class="flex justify-between items-center mb-2"><span class="text-[10px] text-[#3a6080] tracking-wider">SLIP RATE</span><i class="fa-solid fa-arrow-trend-up text-[#10b981]" id="icon-slip"></i></div>
+                    <div class="text-2xl font-bold text-[#10b981] leading-none" id="color-slip"><span id="val-slip">0.0</span><span class="text-xs font-normal text-[#3a6080] ml-1">%</span></div>
                     <div class="mt-1 text-[10px] text-[#4a7090]" id="lbl-slip">✓ NORMAL</div>
                 </div>
                 <div class="card">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-[10px] text-[#3a6080] tracking-wider">STEPPER POSITION</span>
-                        <i class="fa-solid fa-microchip text-[#fbbf24]"></i>
-                    </div>
-                    <div class="text-2xl font-bold text-[#fbbf24] leading-none">
-                        <span id="val-step">0</span><span class="text-xs font-normal text-[#3a6080] ml-1">steps</span>
-                    </div>
+                    <div class="flex justify-between items-center mb-2"><span class="text-[10px] text-[#3a6080] tracking-wider">STEPPER POSITION</span><i class="fa-solid fa-microchip text-[#fbbf24]"></i></div>
+                    <div class="text-2xl font-bold text-[#fbbf24] leading-none"><span id="val-step">0</span><span class="text-xs font-normal text-[#3a6080] ml-1">steps</span></div>
                     <div class="mt-1 text-[10px] text-[#4a7090]">Tensioner Actuator</div>
                 </div>
             </div>
 
             <div class="grid grid-cols-3 gap-3">
                 <div class="card">
-                    <div class="flex items-center gap-2 mb-3">
-                        <i class="fa-solid fa-bolt text-[#00d4ff]"></i>
-                        <span class="text-[11px] text-[#7ba0c0] tracking-wider font-bold">BELT TENSION (N)</span>
-                    </div>
+                    <div class="flex items-center gap-2 mb-3"><i class="fa-solid fa-bolt text-[#00d4ff]"></i><span class="text-[11px] text-[#7ba0c0] tracking-wider font-bold">BELT TENSION (N)</span></div>
                     <div class="h-[150px] relative"><canvas id="chart-tension"></canvas></div>
                 </div>
                 <div class="card">
-                    <div class="flex items-center gap-2 mb-3">
-                        <i class="fa-solid fa-chart-line text-[#a78bfa]"></i>
-                        <span class="text-[11px] text-[#7ba0c0] tracking-wider font-bold">SPEED & SLIP</span>
-                    </div>
+                    <div class="flex items-center gap-2 mb-3"><i class="fa-solid fa-chart-line text-[#a78bfa]"></i><span class="text-[11px] text-[#7ba0c0] tracking-wider font-bold">SPEED & SLIP</span></div>
                     <div class="h-[150px] relative"><canvas id="chart-speed"></canvas></div>
                 </div>
                 <div class="card">
-                    <div class="flex items-center gap-2 mb-3">
-                        <i class="fa-solid fa-wave-square text-[#10b981]"></i>
-                        <span class="text-[11px] text-[#7ba0c0] tracking-wider font-bold">OSCILLATION</span>
-                    </div>
+                    <div class="flex items-center gap-2 mb-3"><i class="fa-solid fa-wave-square text-[#10b981]"></i><span class="text-[11px] text-[#7ba0c0] tracking-wider font-bold">OSCILLATION</span></div>
                     <div class="h-[150px] relative"><canvas id="chart-osc"></canvas></div>
                 </div>
             </div>
@@ -179,7 +148,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div>
                         <button id="btn-apply-sp" class="w-full bg-[#002e52] text-[#00d4ff] border border-[#004a80] rounded py-2 font-bold text-xs tracking-wider mb-2 hover:bg-[#003d6a] transition">
                             ▶ APPLY SET POINT TO DB
@@ -211,7 +179,6 @@
                             </div>
                         </div>
                     </div>
-                    
                     <div>
                         <button id="btn-apply-pid" class="w-full bg-[#12003a] text-[#a78bfa] border border-[#4a1a90] rounded py-2 font-bold text-xs tracking-wider hover:bg-[#1a0050] transition">
                             ⬆ SEND PID PARAMS TO DB
@@ -254,7 +221,6 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // --- 2. GLOBAL STATE ---
         let role = '';
         let isStopped = false;
         let activeSP = 150;
@@ -263,12 +229,11 @@
         let tick = 0;
         let logData = [];
 
-        // --- 3. CHART.JS SETUP ---
         Chart.defaults.color = '#3a6080';
         Chart.defaults.font.family = "'Courier New', Courier, monospace";
         Chart.defaults.plugins.legend.display = false;
         Chart.defaults.elements.point.radius = 0;
-        Chart.defaults.animation = false; // Supaya performa ringan
+        Chart.defaults.animation = false; 
 
         const maxPts = 40;
         const labels = Array(maxPts).fill('');
@@ -277,19 +242,13 @@
 
         const chartTension = new Chart(document.getElementById('chart-tension').getContext('2d'), {
             type: 'line',
-            data: { labels, datasets: [
-                { data: tensionData, borderColor: '#00d4ff', borderWidth: 2 },
-                { data: spData, borderColor: '#f59e0b', borderDash: [5,5], borderWidth: 1.5 }
-            ]},
+            data: { labels, datasets: [{ data: tensionData, borderColor: '#00d4ff', borderWidth: 2 }, { data: spData, borderColor: '#f59e0b', borderDash: [5,5], borderWidth: 1.5 }]},
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false } } }
         });
 
         const chartSpeed = new Chart(document.getElementById('chart-speed').getContext('2d'), {
             type: 'line',
-            data: { labels, datasets: [
-                { data: rpmData, borderColor: '#a78bfa', backgroundColor: '#a78bfa20', fill: true, borderWidth: 2, yAxisID: 'y' },
-                { data: slipData, borderColor: '#f87171', borderWidth: 2, yAxisID: 'y1' }
-            ]},
+            data: { labels, datasets: [{ data: rpmData, borderColor: '#a78bfa', backgroundColor: '#a78bfa20', fill: true, borderWidth: 2, yAxisID: 'y' }, { data: slipData, borderColor: '#f87171', borderWidth: 2, yAxisID: 'y1' }]},
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { position: 'left' }, y1: { position: 'right', min: 0, max: 10 } } }
         });
 
@@ -299,14 +258,14 @@
             options: { responsive: true, maintainAspectRatio: false, scales: { x: { display: false }, y: { min: -8, max: 8 } } }
         });
 
-        // --- 4. LOGGING SYSTEM ---
         const typeStyles = {
             danger: { c: "#ef4444", bg: "#2d0a0a", lbl: "DANGER" }, warning: { c: "#f59e0b", bg: "#2d1b00", lbl: "WARN" },
             info: { c: "#38bdf8", bg: "#001a2e", lbl: "INFO" }, success: { c: "#10b981", bg: "#052e16", lbl: "OK" }
         };
+
         function addLog(msg, type) {
             const now = new Date();
-            const time = String(now.getHours()).padStart(2,'0') + ":" + String(now.getMinutes()).padStart(2,'0');
+            const time = String(now.getHours()).padStart(2,'0') + ":" + String(now.getMinutes()).padStart(2,'0') + ":" + String(now.getSeconds()).padStart(2,'0');
             logData.unshift({ time, msg, type });
             if(logData.length > 8) logData.pop();
             
@@ -320,12 +279,10 @@
             }).join('');
         }
 
-        // --- 5. LOGIN LOGIC ---
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const id = document.getElementById('userid').value.trim().toLowerCase();
             const pass = document.getElementById('password').value.trim();
-            
             if (id === 'admin' && pass === 'admin123') startSystem('admin');
             else if (id === 'viewer' && pass === 'viewer123') startSystem('viewer');
             else document.getElementById('login-error').classList.remove('hidden');
@@ -337,7 +294,6 @@
             document.getElementById('dashboard-page').classList.remove('hidden');
             document.getElementById('dashboard-page').classList.add('flex');
             
-            // Konfigurasi Akses Admin vs Viewer
             document.getElementById('user-role-display').innerText = role.toUpperCase();
             if (role === 'viewer') {
                 ['input-sp', 'btn-apply-sp', 'btn-stop', 'btn-restart', 'input-kp', 'input-ki', 'input-kd', 'btn-apply-pid'].forEach(id => {
@@ -355,11 +311,10 @@
             initFirebaseListeners();
         }
 
-        // --- 6. FIREBASE REALTIME LISTENERS ---
         function initFirebaseListeners() {
             db.ref(".info/connected").on("value", snap => {
-                if(snap.val() === true) addLog("Terhubung ke Firebase Realtime Database", "success");
-                else addLog("Koneksi Firebase terputus", "danger");
+                if(snap.val() === true) addLog("Web terhubung ke Server", "success");
+                else addLog("Web terputus dari Server", "danger");
             });
 
             db.ref("eki/conveyor/sensor").on("value", snapshot => {
@@ -370,7 +325,6 @@
                         document.getElementById('esp-icon').className = "fa-solid fa-wifi text-[#10b981]";
                         document.getElementById('esp-status').className = "bg-[#052e16] text-[#10b981] px-2 py-0.5 rounded text-[9px] font-bold";
                         document.getElementById('esp-status').innerText = "CONNECTED";
-                        addLog("ESP32 Online & Mengirim Data", "success");
                     }
                     clearTimeout(espTimeout);
                     espTimeout = setTimeout(() => {
@@ -378,17 +332,15 @@
                         document.getElementById('esp-icon').className = "fa-solid fa-wifi text-red-500 opacity-60";
                         document.getElementById('esp-status').className = "bg-[#2d0a0a] text-red-500 px-2 py-0.5 rounded text-[9px] font-bold";
                         document.getElementById('esp-status').innerText = "DISCONNECTED";
-                        addLog("ESP32 Disconnected (Timeout)", "danger");
+                        addLog("ESP32 Offline (TIDAK ADA DATA)", "danger");
                     }, 6000);
 
-                    // Update Angka
                     let t = data.tension || 0, r = data.rpm || 0, s = data.slip || 0;
                     document.getElementById('val-tension').innerText = t.toFixed(1);
                     document.getElementById('val-rpm').innerText = r.toLocaleString();
                     document.getElementById('val-slip').innerText = s.toFixed(1);
                     document.getElementById('val-step').innerText = (data.stepPos || 0).toLocaleString();
 
-                    // Status Warna Slip & Tension
                     let mStatus = document.getElementById('machine-status'), mText = document.getElementById('machine-status-text');
                     if(t > 188 || s > 5.8) { mStatus.className = "flex items-center gap-2 bg-[#2d0a0a80] text-red-500 px-3 py-1.5 rounded border border-red-500/50 text-[11px] font-bold"; mText.innerText = "DANGER"; }
                     else if (t > 165 || s > 3.8) { mStatus.className = "flex items-center gap-2 bg-[#2d1b0080] text-[#f59e0b] px-3 py-1.5 rounded border border-[#f59e0b50] text-[11px] font-bold"; mText.innerText = "WARNING"; }
@@ -399,7 +351,6 @@
                     else if(s > 2.5) { cSlip.className = "text-2xl font-bold text-[#f59e0b] leading-none"; lSlip.innerText = "△ WARNING"; iSlip.className = "fa-solid fa-arrow-trend-up text-[#f59e0b]"; }
                     else { cSlip.className = "text-2xl font-bold text-[#10b981] leading-none"; lSlip.innerText = "✓ NORMAL"; iSlip.className = "fa-solid fa-arrow-trend-up text-[#10b981]"; }
 
-                    // Update Charts Array
                     tick++;
                     tensionData.shift(); tensionData.push(t);
                     spData.shift(); spData.push(activeSP);
@@ -444,9 +395,35 @@
                     }
                 }
             });
+
+            // --- PERBAIKAN 1: SINKRONISASI PID DARI DATABASE ---
+            db.ref("eki/conveyor/control/pid").on("value", snap => {
+                const val = snap.val();
+                if(val !== null) {
+                    if(val.kp !== undefined) document.getElementById('input-kp').value = val.kp;
+                    if(val.ki !== undefined) document.getElementById('input-ki').value = val.ki;
+                    if(val.kd !== undefined) document.getElementById('input-kd').value = val.kd;
+                }
+            });
+
+            // --- PERBAIKAN 2: MENDENGARKAN LOG DARI ESP32 ---
+            let isFirstLog = true;
+            db.ref("eki/conveyor/logs").limitToLast(1).on("child_added", snap => {
+                if (isFirstLog) { isFirstLog = false; return; } // Abaikan log usang saat buka web pertama kali
+                
+                const data = snap.val();
+                if(data && data.message) {
+                    let tipe = (data.type || "info").toLowerCase();
+                    // Sesuaikan gaya warna ESP32 dengan sistem Web
+                    if (tipe === "success") tipe = "success";
+                    else if (tipe === "error") tipe = "danger";
+                    else if (tipe === "warning") tipe = "warning";
+                    
+                    addLog(`[${data.role || "ESP32"}] ${data.message}`, tipe);
+                }
+            });
         }
 
-        // --- 7. BUTTON ACTIONS ---
         document.getElementById('input-sp').addEventListener('input', e => document.getElementById('display-sp').innerText = e.target.value);
 
         document.getElementById('btn-apply-sp').addEventListener('click', () => {
@@ -470,8 +447,10 @@
             if(role !== 'admin' || isStopped) return;
             const kp = Number(document.getElementById('input-kp').value), ki = Number(document.getElementById('input-ki').value), kd = Number(document.getElementById('input-kd').value);
             
-            // PATH PENGIRIMAN PID SUDAH DIPERBAIKI KE FOLDER CONTROL
-            db.ref('eki/conveyor/control/pid').set({ kp, ki, kd });
+            // --- PERBAIKAN 3: KIRIM PID SATU PERSATU AGAR ESP32 BISA MEMBACANYA SEBAGAI ANGKA ---
+            db.ref('eki/conveyor/control/pid/kp').set(kp);
+            db.ref('eki/conveyor/control/pid/ki').set(ki);
+            db.ref('eki/conveyor/control/pid/kd').set(kd);
             
             addLog(`PID dikirim → Kp=${kp} Ki=${ki} Kd=${kd}`, "info");
             document.getElementById('pid-msg').style.opacity = '1';
