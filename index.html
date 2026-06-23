@@ -70,6 +70,9 @@
                     <span class="text-[#3a6080]">ESP32</span>
                     <span id="esp-status" class="bg-[#2d0a0a] text-red-500 px-2 py-0.5 rounded text-[9px] font-bold">DISCONNECTED</span>
                 </div>
+                <button id="btn-to-logger" class="bg-[#0e2540] text-[#00d4ff] border border-[#004a80] px-3 py-1.5 rounded text-[10px] font-bold hover:bg-[#003d6a] transition">
+                    <i class="fa-solid fa-database mr-1"></i> DATA LOGGER
+                </button>
                 <button onclick="location.reload()" class="bg-[#2d0a0a] text-red-500 border border-red-500/50 px-3 py-1.5 rounded text-[10px] font-bold hover:bg-red-900/50 transition">LOGOUT</button>
             </div>
         </div>
@@ -107,8 +110,46 @@
         </div>
     </div>
 
+    <div id="logger-page" class="hidden min-h-screen flex-col text-xs">
+        <div class="bg-[#040f20] border-b border-[#0c1e38] p-3 px-5 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#082040] rounded-lg flex items-center justify-center border border-[#0e3060]">
+                    <i class="fa-solid fa-database text-lg text-[#00d4ff]"></i>
+                </div>
+                <div>
+                    <div class="text-[14px] font-bold text-[#c8e8ff] tracking-wider">SYSTEM EVENT LOGS</div>
+                    <div class="text-[10px] text-[#3a6080] tracking-widest mt-1">Firebase Real-Time Data Logger</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <button id="btn-to-dash" class="bg-[#0e2540] text-[#00d4ff] border border-[#004a80] px-3 py-1.5 rounded text-[10px] font-bold hover:bg-[#003d6a] transition">
+                    <i class="fa-solid fa-chart-line mr-1"></i> DASHBOARD
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4 flex-1">
+            <div class="card h-full">
+                <div class="overflow-y-auto max-h-[500px] pr-2">
+                    <table class="w-full text-left border-collapse text-[10px]">
+                        <thead class="sticky top-0 bg-[#06152b]">
+                            <tr class="text-[#3a6080] border-b border-[#0e2540]">
+                                <th class="py-2 px-2 font-normal">WAKTU (TIMESTAMP)</th>
+                                <th class="py-2 px-2 font-normal">MODUL</th>
+                                <th class="py-2 px-2 font-normal">TIPE EVENT</th>
+                                <th class="py-2 px-2 font-normal">PESAN LOG</th>
+                            </tr>
+                        </thead>
+                        <tbody id="log-table-body" class="text-[#c8e8ff] font-mono">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // 1. Konfigurasi Firebase (Sama persis dengan di ESP32)
+        // 1. Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyArR-iM7_ugkql7giBvqtrDiepLmhplb1E",
             databaseURL: "https://conveyor-23347-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -121,6 +162,7 @@
         // Variabel UI
         const loginPage = document.getElementById('login-page');
         const dashboardPage = document.getElementById('dashboard-page');
+        const loggerPage = document.getElementById('logger-page'); // TAMBAHAN VARIABEL HALAMAN LOGGER
         const espStatus = document.getElementById('esp-status');
         const espIcon = document.getElementById('esp-icon');
 
@@ -145,10 +187,24 @@
 
         let dataPoints = 0;
 
+        // TAMBAHAN: FUNGSI PINDAH HALAMAN
+        document.getElementById('btn-to-logger').addEventListener('click', () => {
+            dashboardPage.classList.remove('flex');
+            dashboardPage.classList.add('hidden');
+            loggerPage.classList.remove('hidden');
+            loggerPage.classList.add('flex');
+        });
+
+        document.getElementById('btn-to-dash').addEventListener('click', () => {
+            loggerPage.classList.remove('flex');
+            loggerPage.classList.add('hidden');
+            dashboardPage.classList.remove('hidden');
+            dashboardPage.classList.add('flex');
+        });
+
         // 2. Event Login
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            // Pake Anonymous Auth supaya selaras sama ESP32 lo
             auth.signInAnonymously()
                 .then(() => {
                     loginPage.classList.add('hidden');
@@ -161,6 +217,14 @@
                     console.error("Auth Error:", error);
                 });
         });
+
+        // TAMBAHAN: Fungsi format waktu untuk log
+        function formatWaktu() {
+            const date = new Date();
+            return date.getHours().toString().padStart(2, '0') + ":" + 
+                   date.getMinutes().toString().padStart(2, '0') + ":" + 
+                   date.getSeconds().toString().padStart(2, '0');
+        }
 
         // 3. Fungsi Narik Data Firebase
         function mulaiMonitoring() {
@@ -193,7 +257,7 @@
                     chartSpeed.data.datasets[0].data.push(data.rpmMotor || 0);
                     chartSpeed.data.datasets[1].data.push(data.rpmRoller || 0);
 
-                    // Biar grafik gak kepanjangan (maks 20 titik)
+                    // Biar grafik gak kepanjangan
                     if (chartTension.data.labels.length > 20) {
                         chartTension.data.labels.shift();
                         chartTension.data.datasets[0].data.shift();
@@ -203,6 +267,30 @@
                     }
                     chartTension.update();
                     chartSpeed.update();
+                }
+            });
+
+            // TAMBAHAN: FUNGSI NARIK DATA LOGGER
+            const logTableBody = document.getElementById('log-table-body');
+            db.ref('eki/conveyor/logs').limitToLast(15).on('child_added', (snapshot) => {
+                const logData = snapshot.val();
+                if(logData) {
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-[#0e2540]/50 hover:bg-[#082040] transition";
+                    
+                    // Mewarnai badge log sesuai tipe
+                    let badgeColor = "bg-[#1e293b] text-[#94a3b8]"; 
+                    if(logData.type === "error") badgeColor = "bg-[#3d0000] text-red-400";
+                    if(logData.type === "success") badgeColor = "bg-[#052e16] text-[#10b981]";
+
+                    tr.innerHTML = `
+                        <td class="py-2 px-2 text-[#7ba0c0]">${formatWaktu()}</td>
+                        <td class="py-2 px-2">${logData.role || "ESP32"}</td>
+                        <td class="py-2 px-2"><span class="px-2 py-0.5 rounded text-[9px] font-bold ${badgeColor}">[${logData.type ? logData.type.toUpperCase() : 'INFO'}]</span></td>
+                        <td class="py-2 px-2">${logData.message}</td>
+                    `;
+                    // Insert di paling atas tabel
+                    logTableBody.insertBefore(tr, logTableBody.firstChild);
                 }
             });
         }
