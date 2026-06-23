@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script> <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-database-compat.js"></script>
     
     <style>
         body { background-color: #030c1a; margin: 0; font-family: 'Courier New', Courier, monospace; color: #d0e8ff; }
@@ -210,7 +210,7 @@
     </div>
 
     <script>
-        // --- 1. FIREBASE SETUP ---
+        // --- 1. FIREBASE SETUP DENGAN LOGIN ANONIM ---
         const firebaseConfig = {
             apiKey: "AIzaSyArR-iM7_ugkql7giBvqtrDiepLmhplb1E",
             authDomain: "conveyor-23347-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -218,8 +218,21 @@
             projectId: "conveyor-23347",
             storageBucket: "conveyor-23347.firebasestorage.app"
         };
-        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // Proses Login Anonim
+        const auth = firebase.auth();
+        auth.signInAnonymously().then(() => {
+            console.log("✅ Autentikasi Firebase Anonim Berhasil");
+        }).catch((error) => {
+            console.error("❌ Autentikasi Firebase Gagal:", error.message);
+        });
+
         const db = firebase.database();
+        // ---------------------------------------------
 
         let role = '';
         let isStopped = false;
@@ -396,7 +409,6 @@
                 }
             });
 
-            // --- PERBAIKAN 1: SINKRONISASI PID DARI DATABASE ---
             db.ref("eki/conveyor/control/pid").on("value", snap => {
                 const val = snap.val();
                 if(val !== null) {
@@ -406,15 +418,13 @@
                 }
             });
 
-            // --- PERBAIKAN 2: MENDENGARKAN LOG DARI ESP32 ---
             let isFirstLog = true;
             db.ref("eki/conveyor/logs").limitToLast(1).on("child_added", snap => {
-                if (isFirstLog) { isFirstLog = false; return; } // Abaikan log usang saat buka web pertama kali
+                if (isFirstLog) { isFirstLog = false; return; } 
                 
                 const data = snap.val();
                 if(data && data.message) {
                     let tipe = (data.type || "info").toLowerCase();
-                    // Sesuaikan gaya warna ESP32 dengan sistem Web
                     if (tipe === "success") tipe = "success";
                     else if (tipe === "error") tipe = "danger";
                     else if (tipe === "warning") tipe = "warning";
@@ -447,7 +457,6 @@
             if(role !== 'admin' || isStopped) return;
             const kp = Number(document.getElementById('input-kp').value), ki = Number(document.getElementById('input-ki').value), kd = Number(document.getElementById('input-kd').value);
             
-            // --- PERBAIKAN 3: KIRIM PID SATU PERSATU AGAR ESP32 BISA MEMBACANYA SEBAGAI ANGKA ---
             db.ref('eki/conveyor/control/pid/kp').set(kp);
             db.ref('eki/conveyor/control/pid/ki').set(ki);
             db.ref('eki/conveyor/control/pid/kd').set(kd);
